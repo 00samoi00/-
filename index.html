@@ -1,1 +1,162 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>روابط مجموعة الغسّال</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+
+    background-color: #02030a;
+    background-image:
+        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.75)),
+        url("bg.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+}
+
+.container {
+    width: 100%;
+    max-width: 420px;
+    padding: 30px;
+    border-radius: 28px;
+    background: rgba(10, 12, 30, 0.85);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 40px 80px rgba(0,0,0,.8);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 28px;
+    font-size: 26px;
+}
+
+/* غلاف الزر */
+.btn-wrap {
+    margin: 22px 0;
+}
+
+/* الزر */
+.btn {
+    position: relative;
+    display: block;
+    padding: 18px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    background: rgba(8, 10, 25, 0.97);
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* الإضاءة المحيطية */
+.btn::before {
+    content: "";
+    position: absolute;
+    inset: -25%;
+    background: conic-gradient(
+        from 0deg,
+        #ff5f9e,
+        #8f7bff,
+        #38e8ff,
+        #3cff8f,
+        #ffef5f,
+        #ff5f9e
+    );
+    animation: ambientSpin 16s linear infinite;
+    filter: blur(45px);
+    opacity: 0.45;
+    z-index: -2;
+}
+
+.btn::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border-radius: 18px;
+    background: rgba(8, 10, 25, 0.98);
+    z-index: -1;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+@keyframes ambientSpin {
+    to { transform: rotate(360deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>مجموعة الغسّال – النجف</h1>
+
+    <div class="btn-wrap">
+        <a class="btn" href="https://www.facebook.com/share/1JoUaveZoz/" target="_blank">
+            فيسبوك
+        </a>
+    </div>
+
+    <div class="btn-wrap">
+        <a class="btn" href="https://www.instagram.com/alwash.najaf?igsh=dG5mbjJ3Mnd2b3Zy" target="_blank">
+            إنستجرام
+        </a>
+    </div>
+
+    <div class="btn-wrap">
+        <a class="btn" href="https://www.tiktok.com/@al_alwash_group?_t=ZS-8xy8ovItuUf&_r=1" target="_blank">
+            تيك توك
+        </a>
+    </div>
+
+    <div class="btn-wrap">
+        <a class="btn" href="https://wa.me/qr/MCMEWNICC3MZO1" target="_blank">
+            واتساب 1
+        </a>
+    </div>
+
+    <div class="btn-wrap">
+        <a class="btn" href="https://wa.me/qr/BVIO5GMOSWLMM1" target="_blank">
+            واتساب 2
+        </a>
+    </div>
+
+    <div class="btn-wrap">
+        <a class="btn" href="https://t.me/alwash_najaf1" target="_blank">
+            تليجرام
+        </a>
+    </div>
+
+    <div class="btn-wrap">
+        <a class="btn" href="https://maps.app.goo.gl/FyXrgq5p3QeuEGJh9?g_st=awb" target="_blank">
+            موقعنا على الخريطة
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>
