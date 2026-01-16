@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>عجلة الحظ — قابل للتخصيص</title>
+<style>
+  :root{
+    --bg:#0f1720;
+    --card:#0b1220;
+    --accent:#10b981;
+    --text:#e6eef6;
+  }
+  *{box-sizing:border-box;font-family:Inter, "Segoe UI", Tahoma, sans-serif}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:linear-gradient(180deg,#071124 0%, #041018 100%);
+    color:var(--text);
+    display:flex;
+    gap:20px;
+    padding:20px;
+    align-items:flex-start;
+    justify-content:center;
+  }
+
+  .container{
+    width:100%;
+    max-width:1100px;
+    display:grid;
+    grid-template-columns: 520px 1fr;
+    gap:20px;
+  }
+
+  .card{
+    background: rgba(255,255,255,0.03);
+    border-radius:12px;
+    padding:18px;
+    box-shadow: 0 4px 20px rgba(2,6,23,0.6);
+    border:1px solid rgba(255,255,255,0.03);
+  }
+
+  /* اللوحة اليمنى (العجلة) */
+  .wheel-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+  }
+
+  #wheelCanvas{
+    width:440px;
+    height:440px;
+    border-radius:50%;
+    background:conic-gradient(rgba(255,255,255,0.03), transparent);
+    box-shadow: 0 8px 30px rgba(2,6,23,0.6), inset 0 -6px 12px rgba(0,0,0,0.25);
+    transform-origin:center center;
+    transition:box-shadow .25s ease;
+  }
+
+  .pointer{
+    width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;
+    border-bottom:34px solid var(--accent);
+    position:relative; top:-18px;
+    filter:drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+  }
+
+  .controls{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  button{
+    background:var(--accent);
+    color:#042019;
+    border:none;
+    padding:10px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  button.ghost{
+    background:transparent;
+    color:var(--text);
+    border:1px solid rgba(255,255,255,0.06);
+  }
+
+  .right{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .form-row{
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  input[type="text"]{
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+    color:var(--text);
+    flex:1;
+  }
+
+  input[type="color"]{
+    height:40px;
+    width:46px;
+    border-radius:8px;
+    border:0;
+    padding:0;
+    cursor:pointer;
+  }
+
+  .items-list{
+    max-height:340px;
+    overflow:auto;
+    margin-top:8px;
+    border-radius:8px;
+    padding:8px;
+    background: rgba(0,0,0,0.2);
+    border:1px solid rgba(255,255,255,0.02);
+  }
+
+  .item{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    padding:8px;
+    border-radius:8px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+    margin-bottom:8px;
+  }
+
+  .color-chip{
+    width:36px;height:36px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);
+  }
+
+  .item-text{flex:1; font-weight:600}
+
+  .small{font-size:13px;color:#9fb1c4}
+
+  footer{margin-top:10px;color:#9fb1c4;font-size:13px;text-align:center}
+  @media(max-width:980px){
+    .container{grid-template-columns: 1fr; padding-bottom:40px}
+    #wheelCanvas{width:360px;height:360px}
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="card wheel-wrap">
+      <div class="pointer" id="pointer" title="المؤشر"></div>
+      <canvas id="wheelCanvas" width="880" height="880"></canvas>
+
+      <div class="controls">
+        <button id="spinBtn">لف العجلة 🎡</button>
+        <button id="quickAddBtn" class="ghost">أضف خيارات تجريبية</button>
+        <button id="resetBtn" class="ghost">إعادة تعيين</button>
+      </div>
+
+      <div style="width:100%;display:flex;justify-content:center;margin-top:8px;">
+        <div class="small">انقر على قطعة أو استخدم قائمة العناصر لتعديل أو حذف</div>
+      </div>
+      <footer class="small">حفظ محليًا (localStorage) — يمكنك تخصيص الألوان والنصوص</footer>
+    </div>
+
+    <div class="card right">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h3 style="margin:0 0 4px 0;">قائمة العناصر</h3>
+          <div class="small">أضف العناصر التي تريدها تظهر في العجلة</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <label class="small">لون النص</label>
+          <input type="color" id="textColorPicker" value="#ffffff" title="لون النص في القطع">
+          <label class="small">لون المؤشر</label>
+          <input type="color" id="pointerColor" value="#10b981" title="لون المؤشر">
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top:10px">
+        <input id="newItemInput" type="text" placeholder="نص العنصر (مثال: جائزة 10$)" />
+        <input id="newItemColor" type="color" value="#f59e0b" title="لون القطعة" />
+        <button id="addItemBtn">أضف</button>
+      </div>
+
+      <div class="items-list" id="itemsList" aria-live="polite"></div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button id="exportBtn" class="ghost">تصدير JSON</button>
+        <button id="importBtn" class="ghost">استيراد JSON</button>
+        <input type="file" id="importFile" style="display:none" accept="application/json" />
+        <button id="randomPick" class="ghost">اختيار عشوائي (بدون دوران)</button>
+      </div>
+
+      <div style="margin-top:10px">
+        <div class="small">نصائح: كلما زادت العناصر تصبح كل قطعة أصغر. لتلوين مخصص لكل قطعة استخدم اختيار اللون بجانب كل عنصر.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ====== بيانات البداية ====== */
+const STORAGE_KEY = 'wheel_of_fortune_v1';
+let state = {
+  items: [
+    // الافتراضي يحتوي على بعض العناصر الفارغة — سيستبدل عند وجود حفظ محلي
+    {text:'جائزة 1', color:'#ef4444'},
+    {text:'جائزة 2', color:'#f59e0b'},
+    {text:'جائزة 3', color:'#10b981'},
+    {text:'محاولة إضافية', color:'#3b82f6'}
+  ],
+  textColor: '#ffffff',
+  pointerColor: '#10b981'
+};
+
+/* ====== عناصر DOM ====== */
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+const addItemBtn = document.getElementById('addItemBtn');
+const newItemInput = document.getElementById('newItemInput');
+const newItemColor = document.getElementById('newItemColor');
+const itemsListEl = document.getElementById('itemsList');
+const spinBtn = document.getElementById('spinBtn');
+const pointerEl = document.getElementById('pointer');
+const textColorPicker = document.getElementById('textColorPicker');
+const pointerColorPicker = document.getElementById('pointerColor');
+const quickAddBtn = document.getElementById('quickAddBtn');
+const resetBtn = document.getElementById('resetBtn');
+const exportBtn = document.getElementById('exportBtn');
+const importBtn = document.getElementById('importBtn');
+const importFile = document.getElementById('importFile');
+const randomPickBtn = document.getElementById('randomPick');
+
+/* ====== تحميل وحفظ ====== */
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && parsed.items && parsed.items.length) state = parsed;
+    }
+  }catch(e){}
+  renderItemsList();
+  drawWheel();
+  textColorPicker.value = state.textColor || '#ffffff';
+  pointerColorPicker.value = state.pointerColor || '#10b981';
+  pointerEl.style.borderBottomColor = state.pointerColor || '#10b981';
+}
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+/* ====== رسم العجلة ====== */
+function drawWheel(rotationDeg = 0){
+  const dpr = window.devicePixelRatio || 1;
+  const size = Math.min(canvas.clientWidth, canvas.clientHeight);
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,canvas.width,dpr);
+
+  const cx = canvas.width / dpr / 2;
+  const cy = canvas.height / dpr / 2;
+  const radius = Math.min(cx,cy) - 8;
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(rotationDeg * Math.PI / 180);
+  ctx.translate(-cx, -cy);
+
+  const n = Math.max(1, state.items.length);
+  const angle = 360 / n;
+  for(let i=0;i<n;i++){
+    const start = (i * angle) * Math.PI / 180;
+    const end = ((i+1) * angle) * Math.PI / 180;
+    // Fill
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy, radius, start, end);
+    ctx.closePath();
+    ctx.fillStyle = state.items[i].color || palette(i);
+    ctx.fill();
+
+    // Stroke
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+    ctx.stroke();
+
+    // نص
+    ctx.save();
+    // نص في منتصف القوس
+    const midAngle = (start + end) / 2;
+    ctx.translate(cx, cy);
+    ctx.rotate(midAngle);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = state.textColor || '#ffffff';
+    // ضبط حجم النص اعتمادًا على طول النص وعدد القطع
+    let fontSize = Math.max(12, Math.min(20, radius * 0.12 - n*0.5));
+    ctx.font = `bold ${fontSize}px sans-serif`;
+    ctx.fillText(state.items[i].text, radius - 18, 6);
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // مركز دائري
+  ctx.beginPath();
+  ctx.arc(cx,cy, 38, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.stroke();
+}
+
+/* ألوان بديلة إذا لم تُعطَ */
+function palette(i){
+  const pal = ['#ef4444','#f97316','#f59e0b','#eab308','#10b981','#06b6d4','#3b82f6','#8b5cf6','#ec4899','#6366f1'];
+  return pal[i % pal.length];
+}
+
+/* ====== واجهة قائمة العناصر ====== */
+function renderItemsList(){
+  itemsListEl.innerHTML = '';
+  state.items.forEach((it, idx) => {
+    const itemEl = document.createElement('div');
+    itemEl.className = 'item';
+    // لون القطعة (تعديل)
+    const colorInput = document.createElement('input');
+    colorInput.type = 'color';
+    colorInput.value = it.color || '#cccccc';
+    colorInput.className = 'color-chip';
+    colorInput.title = 'تغيير لون هذه القطعة';
+    colorInput.addEventListener('input', (e)=>{
+      state.items[idx].color = e.target.value;
+      saveState(); drawWheel(currentRotation);
+    });
+
+    const textDiv = document.createElement('div');
+    textDiv.className = 'item-text';
+    textDiv.contentEditable = true;
+    textDiv.spellcheck = false;
+    textDiv.innerText = it.text;
+    textDiv.addEventListener('input', (e)=>{
+      state.items[idx].text = e.target.innerText.trim() || ('عنصر ' + (idx+1));
+      saveState(); drawWheel(currentRotation);
+    });
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'ghost';
+    delBtn.style.padding = '6px 8px';
+    delBtn.innerText = 'حذف';
+    delBtn.addEventListener('click', ()=>{
+      state.items.splice(idx,1);
+      if(state.items.length===0) state.items.push({text:'فارغ',color:'#888'});
+      saveState(); renderItemsList(); drawWheel(currentRotation);
+    });
+
+    itemEl.appendChild(colorInput);
+    itemEl.appendChild(textDiv);
+    itemEl.appendChild(delBtn);
+
+    // السماح بالنقر على القطعة لرؤية مكانها - نحسب زاوية وسطها
+    itemEl.addEventListener('click', () => {
+      // لا نسأل، نقوم بتدوير العجلة إلى هذه القطعة كعرض سريع
+      spinToIndex(idx);
+    });
+
+    itemsListEl.appendChild(itemEl);
+  });
+}
+
+/* ====== إضافة عناصر ====== */
+addItemBtn.addEventListener('click', ()=>{
+  const txt = newItemInput.value.trim();
+  if(!txt) return;
+  state.items.push({text:txt, color:newItemColor.value});
+  newItemInput.value = '';
+  saveState(); renderItemsList(); drawWheel(currentRotation);
+});
+
+newItemInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter') addItemBtn.click(); });
+
+quickAddBtn.addEventListener('click', ()=>{
+  const demo = [
+    {text:'جائزة كبرى', color:'#ef4444'},
+    {text:'قسيمة 50%', color:'#f97316'},
+    {text:'هدية', color:'#10b981'},
+    {text:'لا شيء 😅', color:'#94a3b8'},
+    {text:'جائزة صغيرة', color:'#6366f1'}
+  ];
+  state.items = demo;
+  saveState(); renderItemsList(); drawWheel(currentRotation);
+});
+
+resetBtn.addEventListener('click', ()=>{
+  if(confirm('هل تريد إعادة التعيين لمساحةٍ جديدة (سيُحذف الحفظ المحلي)؟')) {
+    localStorage.removeItem(STORAGE_KEY);
+    state = {items: [{text:'جائزة 1', color:'#ef4444'},{text:'جائزة 2', color:'#f59e0b'}], textColor:'#ffffff', pointerColor:'#10b981'};
+    textColorPicker.value = state.textColor;
+    pointerColorPicker.value = state.pointerColor;
+    saveState(); renderItemsList(); drawWheel(currentRotation);
+  }
+});
+
+/* ====== استيراد وتصدير JSON ====== */
+exportBtn.addEventListener('click', ()=>{
+  const data = JSON.stringify(state, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'wheel-data.json'; a.click();
+  URL.revokeObjectURL(url);
+});
+
+importBtn.addEventListener('click', ()=> importFile.click());
+importFile.addEventListener('change', async (e)=>{
+  const file = e.target.files?.[0];
+  if(!file) return;
+  try{
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    if(parsed && parsed.items) {
+      state = parsed;
+      saveState(); renderItemsList(); drawWheel(currentRotation);
+      textColorPicker.value = state.textColor || '#ffffff';
+      pointerColorPicker.value = state.pointerColor || '#10b981';
+      pointerEl.style.borderBottomColor = state.pointerColor || '#10b981';
+    } else alert('ملف غير صالح: يجب أن يحتوي على حقل items.');
+  }catch(err){ alert('خطأ بقراءة الملف'); }
+});
+
+/* ====== اختيار عشوائي بدون دوران ====== */
+randomPickBtn.addEventListener('click', ()=>{
+  const idx = Math.floor(Math.random() * state.items.length);
+  alert('النتيجة: ' + state.items[idx].text);
+});
+
+/* ====== تغيير ألوان عامة ====== */
+textColorPicker.addEventListener('input', (e)=>{
+  state.textColor = e.target.value;
+  saveState(); drawWheel(currentRotation);
+});
+pointerColorPicker.addEventListener('input', (e)=>{
+  state.pointerColor = e.target.value;
+  pointerEl.style.borderBottomColor = e.target.value;
+  state.pointerColor = e.target.value;
+  saveState();
+});
+
+/* ====== دوران العجلة ====== */
+// We'll use CSS transform on the canvas wrapper via inline style (rotate).
+let currentRotation = 0;
+let spinning = false;
+
+function degToRad(d){return d * Math.PI / 180;}
+
+function spinToIndex(index){
+  if(spinning) return;
+  const n = Math.max(1, state.items.length);
+  const anglePer = 360 / n;
+  // We want the selected segment's center to land at pointer (pointer pointing downward? pointer is at top pointing down).
+  // pointer sits above wheel pointing down; we want the mid-angle of the segment to be at -90deg (top).
+  const targetMid = index * anglePer + anglePer/2; // degrees in wheel local coordinates
+  // compute needed rotation so that targetMid lines up with 270deg (i.e., -90)
+  // currentRotation rotates the wheel by currentRotation degrees (clockwise positive)
+  // finalRotation such that (currentRotation + finalRotation) + targetMid = 270 + 360*k
+  // => finalRotation = 270 - targetMid - currentRotation + 360*k
+  const spins = 6 + Math.floor(Math.random()*3); // full spins
+  let finalRotation = 270 - targetMid - currentRotation + spins*360;
+  // normalize finalRotation to positive
+  finalRotation = finalRotation % 3600;
+  if(finalRotation < 0) finalRotation += 3600;
+  animateSpin(finalRotation, index);
+}
+
+function animateSpin(extraRotation, targetIndex){
+  spinning = true;
+  spinBtn.disabled = true;
+  const start = performance.now();
+  const duration = 3000 + Math.random()*1200; // 3-4.2s
+  const startRotation = currentRotation;
+  const endRotation = currentRotation + extraRotation;
+
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+  function frame(now){
+    const t = Math.min(1, (now - start) / duration);
+    const eased = easeOutCubic(t);
+    currentRotation = startRotation + (endRotation - startRotation) * eased;
+    // draw wheel with rotation
+    drawWheel(currentRotation);
+    if(t < 1){
+      requestAnimationFrame(frame);
+    } else {
+      // نهاية
+      spinning = false;
+      spinBtn.disabled = false;
+      // حساب الفهرس النهائي بدقة
+      const n = Math.max(1, state.items.length);
+      const normalized = ((currentRotation % 360) + 360) % 360; // 0..360
+      // the wheel is rotated by normalized degrees; the segment at 270deg (pointer) is:
+      const anglePer = 360 / n;
+      // compute which segment's center is closest to 270
+      let sector = Math.floor(((270 - normalized + 360) % 360) / anglePer);
+      sector = (sector + n) % n;
+      setTimeout(()=> {
+        alert('النتيجة: ' + state.items[sector].text);
+      }, 120);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+spinBtn.addEventListener('click', ()=>{
+  if(spinning) return;
+  if(state.items.length === 0) return alert('لا توجد عناصر!');
+  const idx = Math.floor(Math.random() * state.items.length);
+  spinToIndex(idx);
+});
+
+/* يمكن النقر على الـ canvas لتوليد دوران سريع نحو عنصر */
+canvas.addEventListener('click', (e)=>{
+  // اختر عنصر عشوائي صغير
+  if(!spinning){
+    const idx = Math.floor(Math.random() * state.items.length);
+    spinToIndex(idx);
+  }
+});
+
+/* ====== استجابة وتعديل الحجم ====== */
+window.addEventListener('resize', () => drawWheel(currentRotation));
+
+/* ====== تحميل أولي ====== */
+loadState();
+
+/* رسم أولي مع تحديث pointer color */
+pointerEl.style.borderBottomColor = state.pointerColor || '#10b981';
+
+/* ====== السحب والإفلات (اختياري) - ليس مطلوبًا لكن مفيد ======
+   (ميزة مستقبلية: إعادة ترتيب العناصر) */
+
+/* نهاية السطر */
+</script>
+</body>
+</html>
