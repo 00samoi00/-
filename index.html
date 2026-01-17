@@ -15,7 +15,6 @@
         }
 
         body {
-            /* إظهار الخلفية كاملة دون قص */
             background-image: url('bg.jpg');
             background-size: cover;
             background-position: center;
@@ -28,14 +27,10 @@
             padding-bottom: 50px;
         }
 
-        /* تعتيم خفيف للخلفية لبروز المحتوى */
         body::before {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.45);
             z-index: -1;
         }
@@ -61,10 +56,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        .logo-container img {
-            width: 85%;
-            height: auto;
-        }
+        .logo-container img { width: 85%; height: auto; }
 
         h1 {
             font-size: 1.35rem;
@@ -80,43 +72,37 @@
             max-width: 420px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .btn {
             display: flex;
             justify-content: space-between; 
             align-items: center;
-            padding: 15px 25px;
+            padding: 14px 25px;
             border-radius: 50px;
             text-decoration: none;
             color: white;
             font-weight: 600;
-            font-size: 1.1rem;
-            transition: transform 0.2s ease, filter 0.2s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            font-size: 1.05rem;
+            transition: transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        .btn i {
-            font-size: 1.4rem;
-        }
+        .btn i { font-size: 1.3rem; }
+        .btn:active { transform: scale(0.97); }
 
-        .btn:active {
-            transform: scale(0.96);
-        }
-
-        /* الألوان المتدرجة والصلبة حسب الصورة */
+        /* الألوان */
         .instagram { background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045); }
         .facebook { background-color: #1877f2; }
         .whatsapp { background-color: #25d366; }
         .telegram { background-color: #0088cc; }
         .map { background-color: #34a853; }
-        .website { background-color: #4CAF50; }
+        .tiktok { background-color: #000000; } /* لون تيك توك الأسود */
 
         @media (max-width: 480px) {
             h1 { font-size: 1.15rem; }
-            .btn { padding: 13px 22px; font-size: 1.05rem; }
-            .logo-container { width: 115px; height: 115px; }
+            .btn { padding: 12px 22px; }
         }
     </style>
 </head>
@@ -141,7 +127,12 @@
         </a>
 
         <a href="https://wa.me/qr/BVIO5GMOSWLMM1" class="btn whatsapp" target="_blank">
-            <span>WhatsApp</span>
+            <span>WhatsApp 1</span>
+            <i class="fab fa-whatsapp"></i>
+        </a>
+
+        <a href="https://wa.me/qr/MCMEWNICC3MZO1" class="btn whatsapp" target="_blank">
+            <span>WhatsApp 2</span>
             <i class="fab fa-whatsapp"></i>
         </a>
 
@@ -155,9 +146,9 @@
             <i class="fas fa-map-marker-alt"></i>
         </a>
 
-        <a href="https://www.tiktok.com/@al_alwash_group?_t=ZS-8xy8ovItuUf&_r=1" class="btn website" target="_blank">
-            <span>Website</span>
-            <i class="fas fa-globe"></i>
+        <a href="https://www.tiktok.com/@al_alwash_group?_t=ZS-8xy8ovItuUf&_r=1" class="btn tiktok" target="_blank">
+            <span>TikTok</span>
+            <i class="fab fa-tiktok"></i>
         </a>
     </div>
 
