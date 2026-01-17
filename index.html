@@ -28,6 +28,54 @@ body {
     background-size: contain;
 }
 
+/* ====== الشعار العلوي ====== */
+.logo-top {
+    position: fixed;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    transition: all 0.4s ease;
+}
+
+.logo-top img {
+    width: 80px;
+    height: auto;
+    opacity: 0.95;
+
+    /* وهج أحمر */
+    filter:
+        drop-shadow(0 0 6px rgba(255, 0, 0, 0.45))
+        drop-shadow(0 0 14px rgba(255, 0, 0, 0.35))
+        drop-shadow(0 0 28px rgba(255, 0, 0, 0.25));
+
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+/* نبض الوهج */
+@keyframes glowPulse {
+    0%, 100% {
+        filter:
+            drop-shadow(0 0 6px rgba(255, 0, 0, 0.35))
+            drop-shadow(0 0 14px rgba(255, 0, 0, 0.25))
+            drop-shadow(0 0 28px rgba(255, 0, 0, 0.15));
+    }
+    50% {
+        filter:
+            drop-shadow(0 0 10px rgba(255, 0, 0, 0.7))
+            drop-shadow(0 0 22px rgba(255, 0, 0, 0.55))
+            drop-shadow(0 0 40px rgba(255, 0, 0, 0.4));
+    }
+}
+
+/* إخفاء الشعار عند السحب */
+.logo-hidden {
+    opacity: 0;
+    transform: translate(-50%, -30px);
+    pointer-events: none;
+}
+
+/* ====== الصندوق ====== */
 .container {
     width: 100%;
     max-width: 420px;
@@ -36,6 +84,7 @@ body {
     background: rgba(10, 12, 30, 0.85);
     backdrop-filter: blur(14px);
     box-shadow: 0 40px 80px rgba(0,0,0,.8);
+    margin-top: 120px;
 }
 
 h1 {
@@ -44,12 +93,10 @@ h1 {
     font-size: 26px;
 }
 
-/* غلاف الزر */
 .btn-wrap {
     margin: 22px 0;
 }
 
-/* الزر */
 .btn {
     position: relative;
     display: block;
@@ -65,7 +112,6 @@ h1 {
     isolation: isolate;
 }
 
-/* الإضاءة المحيطية */
 .btn::before {
     content: "";
     position: absolute;
@@ -110,43 +156,36 @@ h1 {
 
 <body>
 
+<!-- الشعار -->
+<div class="logo-top" id="logo">
+    <img src="logo.png" alt="شعار مجموعة شركات العلوش التجارية">
+</div>
+
 <div class="container">
     <h1>مجموعة شركات العلوش التجارية – النجف</h1>
 
     <div class="btn-wrap">
-        <a class="btn" href="https://www.facebook.com/share/1JoUaveZoz/" target="_blank">
-            فيسبوك
-        </a>
+        <a class="btn" href="https://www.facebook.com/share/1JoUaveZoz/" target="_blank">فيسبوك</a>
     </div>
 
     <div class="btn-wrap">
-        <a class="btn" href="https://www.instagram.com/alwash.najaf?igsh=dG5mbjJ3Mnd2b3Zy" target="_blank">
-            إنستجرام
-        </a>
+        <a class="btn" href="https://www.instagram.com/alwash.najaf" target="_blank">إنستجرام</a>
     </div>
 
     <div class="btn-wrap">
-        <a class="btn" href="https://www.tiktok.com/@al_alwash_group?_t=ZS-8xy8ovItuUf&_r=1" target="_blank">
-            تيك توك
-        </a>
+        <a class="btn" href="https://www.tiktok.com" target="_blank">تيك توك</a>
     </div>
 
     <div class="btn-wrap">
-        <a class="btn" href="https://wa.me/qr/MCMEWNICC3MZO1" target="_blank">
-            واتساب 1
-        </a>
+        <a class="btn" href="https://wa.me/qr/MCMEWNICC3MZO1" target="_blank">واتساب 1</a>
     </div>
 
     <div class="btn-wrap">
-        <a class="btn" href="https://wa.me/qr/BVIO5GMOSWLMM1" target="_blank">
-            واتساب 2
-        </a>
+        <a class="btn" href="https://wa.me/qr/BVIO5GMOSWLMM1" target="_blank">واتساب 2</a>
     </div>
 
     <div class="btn-wrap">
-        <a class="btn" href="https://t.me/alwash_najaf1" target="_blank">
-            تليجرام
-        </a>
+        <a class="btn" href="https://t.me/alwash_najaf1" target="_blank">تليجرام</a>
     </div>
 
     <div class="btn-wrap">
@@ -154,8 +193,24 @@ h1 {
             موقعنا على الخريطة
         </a>
     </div>
-
 </div>
+
+<script>
+let lastScroll = 0;
+const logo = document.getElementById("logo");
+
+window.addEventListener("scroll", () => {
+    const currentScroll = window.pageYOffset;
+
+    if (currentScroll > lastScroll && currentScroll > 50) {
+        logo.classList.add("logo-hidden");
+    } else {
+        logo.classList.remove("logo-hidden");
+    }
+
+    lastScroll = currentScroll;
+});
+</script>
 
 </body>
 </html>
