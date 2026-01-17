@@ -15,9 +15,12 @@
         }
 
         body {
+            /* تعديل لإظهار الصورة كاملة دون أي قص */
             background-image: url('bg.jpg');
-            background-size: cover;
-            background-position: center;
+            background-size: contain; /* إظهار الصورة بالكامل */
+            background-position: top center; /* تبدأ من الأعلى */
+            background-repeat: no-repeat;
+            background-color: #0c0c0c; /* لون خلفية للمساحات المتبقية */
             background-attachment: fixed;
             min-height: 100vh;
             display: flex;
@@ -27,31 +30,32 @@
             padding-bottom: 50px;
         }
 
+        /* تعتيم خفيف ليبرز النص فوق الصورة */
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(0, 0, 0, 0.4);
             z-index: -1;
         }
 
         header {
             text-align: center;
-            margin-top: 40px;
-            margin-bottom: 30px;
+            margin-top: 30px;
+            margin-bottom: 25px;
             width: 90%;
         }
 
         .logo-container {
-            width: 125px;
-            height: 125px;
+            width: 110px;
+            height: 110px;
             background: white;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 auto 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            margin: 0 auto 15px;
+            border: 3px solid #fff;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
@@ -59,17 +63,16 @@
         .logo-container img { width: 85%; height: auto; }
 
         h1 {
-            font-size: 1.35rem;
-            line-height: 1.6;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 1);
-            max-width: 450px;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 1);
+            max-width: 400px;
             margin: 0 auto;
-            font-weight: bold;
         }
 
         .links-container {
             width: 85%;
-            max-width: 420px;
+            max-width: 400px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -79,7 +82,7 @@
             display: flex;
             justify-content: space-between; 
             align-items: center;
-            padding: 14px 25px;
+            padding: 13px 25px;
             border-radius: 50px;
             text-decoration: none;
             color: white;
@@ -92,17 +95,19 @@
         .btn i { font-size: 1.3rem; }
         .btn:active { transform: scale(0.97); }
 
-        /* الألوان */
+        /* ألوان الأزرار */
         .instagram { background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045); }
         .facebook { background-color: #1877f2; }
         .whatsapp { background-color: #25d366; }
         .telegram { background-color: #0088cc; }
         .map { background-color: #34a853; }
-        .tiktok { background-color: #000000; } /* لون تيك توك الأسود */
+        .tiktok { background-color: #000000; }
 
         @media (max-width: 480px) {
-            h1 { font-size: 1.15rem; }
-            .btn { padding: 12px 22px; }
+            h1 { font-size: 1.1rem; }
+            .btn { padding: 11px 20px; }
+            /* في الجوال قد نحتاج لتغطية الشاشة لضمان عدم وجود فراغ أبيض */
+            body { background-size: cover; } 
         }
     </style>
 </head>
