@@ -14,41 +14,46 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* هذا الجزء هو السر لظهور الخلفية كاملة */
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
         body {
-            /* تعديل لإظهار الصورة كاملة دون أي قص */
+            /* إظهار الصورة كاملة ومطابقة لأبعاد الشاشة تماماً */
             background-image: url('bg.jpg');
-            background-size: contain; /* إظهار الصورة بالكامل */
-            background-position: top center; /* تبدأ من الأعلى */
+            background-size: 100% 100%; /* تجبر الصورة على الظهور كاملة من الحافة للحافة */
+            background-position: center;
             background-repeat: no-repeat;
-            background-color: #0c0c0c; /* لون خلفية للمساحات المتبقية */
-            background-attachment: fixed;
-            min-height: 100vh;
+            background-attachment: fixed; /* لضمان ثباتها عند التمرير */
+            
             display: flex;
             flex-direction: column;
             align-items: center;
             color: white;
-            padding-bottom: 50px;
+            padding-bottom: 30px;
         }
 
-        /* تعتيم خفيف ليبرز النص فوق الصورة */
+        /* تعتيم خفيف جداً لضمان قراءة النص مع الحفاظ على تفاصيل الصورة */
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
             z-index: -1;
         }
 
         header {
             text-align: center;
             margin-top: 30px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             width: 90%;
         }
 
         .logo-container {
-            width: 110px;
-            height: 110px;
+            width: 100px;
+            height: 100px;
             background: white;
             border-radius: 50%;
             display: flex;
@@ -57,43 +62,43 @@
             margin: 0 auto 15px;
             border: 3px solid #fff;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         .logo-container img { width: 85%; height: auto; }
 
         h1 {
-            font-size: 1.25rem;
-            line-height: 1.5;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 1);
-            max-width: 400px;
+            font-size: 1.2rem;
+            line-height: 1.4;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 1);
+            max-width: 350px;
             margin: 0 auto;
         }
 
         .links-container {
-            width: 85%;
-            max-width: 400px;
+            width: 88%;
+            max-width: 380px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .btn {
             display: flex;
             justify-content: space-between; 
             align-items: center;
-            padding: 13px 25px;
+            padding: 12px 20px;
             border-radius: 50px;
             text-decoration: none;
             color: white;
             font-weight: 600;
-            font-size: 1.05rem;
+            font-size: 1rem;
             transition: transform 0.2s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
-        .btn i { font-size: 1.3rem; }
-        .btn:active { transform: scale(0.97); }
+        .btn i { font-size: 1.2rem; }
+        .btn:active { transform: scale(0.96); }
 
         /* ألوان الأزرار */
         .instagram { background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045); }
@@ -103,11 +108,11 @@
         .map { background-color: #34a853; }
         .tiktok { background-color: #000000; }
 
-        @media (max-width: 480px) {
-            h1 { font-size: 1.1rem; }
-            .btn { padding: 11px 20px; }
-            /* في الجوال قد نحتاج لتغطية الشاشة لضمان عدم وجود فراغ أبيض */
-            body { background-size: cover; } 
+        /* تعديلات بسيطة للهواتف الصغيرة جداً */
+        @media (max-width: 360px) {
+            h1 { font-size: 1rem; }
+            .logo-container { width: 85px; height: 85px; }
+            .btn { padding: 10px 15px; font-size: 0.9rem; }
         }
     </style>
 </head>
