@@ -21,6 +21,7 @@ body {
     color: #fff;
     background-color: #02030a;
 
+    /* الخلفية مع تدرج شبه شفاف */
     background-image:
         linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)),
         url("bg.jpg");
@@ -32,7 +33,7 @@ body {
 
 /* ====== الهيدر ====== */
 header {
-    position: relative; /* غيرنا من fixed الى relative */
+    position: relative; /* لم يعد ثابت لتجنب الحاجة للسحب */
     width: 100%;
     display: flex;
     justify-content: center;
@@ -47,6 +48,7 @@ header {
     border-radius: 50%;
     padding: 3px;
 
+    /* الإطار المشع */
     background: radial-gradient(
         circle,
         rgba(255,0,0,0.9),
@@ -70,6 +72,7 @@ header {
     display: block;
 }
 
+/* نبض الإطار */
 @keyframes ringGlow {
     0%, 100% {
         box-shadow:
@@ -91,7 +94,7 @@ header {
     margin: 20px auto 40px;
     padding: 20px;
     border-radius: 20px;
-    background: rgba(10, 12, 30, 0.6);
+    background: rgba(10, 12, 30, 0.6); /* شبه شفاف */
     backdrop-filter: blur(10px);
     box-shadow: 0 20px 40px rgba(0,0,0,.6);
 }
@@ -117,7 +120,7 @@ h1 {
     font-weight: 600;
     color: #fff;
     text-decoration: none;
-    background: rgba(8, 10, 25, 0.5); /* نصف شفاف */
+    background: rgba(8, 10, 25, 0.5); /* شفاف جزئياً */
     overflow: hidden;
     isolation: isolate;
     transition: all 0.3s ease;
